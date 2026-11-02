@@ -1,4 +1,5 @@
 import AppKit
+import AVFoundation
 import Combine
 import CoreAudio
 import GameController
@@ -83,7 +84,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
             case .display: return 600
             case .mouse: return 470
             case .controller: return 620
-            case .sound: return 440
+            case .sound: return 670
             case .games: return 620
             case .vr: return 800
             case .advanced: return 720
@@ -830,6 +831,7 @@ private struct SoundTab: View {
     @EnvironmentObject var settings: LauncherSettings
     @EnvironmentObject var context: SettingsContext
     @StateObject private var monitor = AudioDeviceMonitor()
+    @StateObject private var microphone = MicrophoneStatus()
 
     private var probe: SoundControl { context.sound ?? SoundControl() }
 
@@ -894,8 +896,38 @@ private struct SoundTab: View {
                         Label { Text(verbatim: p) } icon: { Image(systemName: "exclamationmark.triangle") }
                             .font(.caption).foregroundStyle(.orange)
                     }
-                    Text("Microphone: the guest records from the macOS default input; macOS asks for permission the first time.")
-                        .font(.caption).foregroundStyle(.secondary)
+                }
+            }
+            Section {
+                LabeledContent("Mac input device") {
+                    Text(verbatim: microphone.inputName ?? String(localized: "No input device connected"))
+                }
+                HStack {
+                    Text("Microphone permission")
+                    Spacer()
+                    switch microphone.permission {
+                    case .authorized: Text("Allowed").foregroundStyle(.secondary)
+                    case .notDetermined:
+                        Button("Allow Microphone") { microphone.requestPermission() }.disabled(microphone.requesting)
+                    case .denied, .restricted:
+                        Text("Not allowed").foregroundStyle(.orange)
+                        Button("Open Microphone Settings") { microphone.openPermissions() }
+                    @unknown default: Text("Unknown").foregroundStyle(.secondary)
+                    }
+                }
+                if microphone.permission == .authorized {
+                    Label(microphone.active ? "Mac input device is in use" : "Mac input device is idle",
+                          systemImage: microphone.active ? "mic.fill" : "mic")
+                        .foregroundStyle(.secondary)
+                }
+            } header: {
+                Text("Microphone")
+            } footer: {
+                Text("SteamOS records from the Mac's default input when a game or voice chat requests it. Choose the input in macOS Sound settings. Device activity can include other Mac apps and does not confirm that SteamOS receives a signal.")
+                    .font(.caption).foregroundStyle(.secondary)
+                if !context.vmHasSound {
+                    Text("Enable Sound and restart the VM to provide a microphone to SteamOS.")
+                        .font(.caption).foregroundStyle(.orange)
                 }
             }
         }

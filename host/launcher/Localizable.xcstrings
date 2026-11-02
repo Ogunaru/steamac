@@ -770,6 +770,8 @@
         }
       }
     },
+    "Allow Microphone": {},
+    "Allowed": {},
     "Always included: app, macOS and library versions, Mac model, GPU, disk sizes and the launcher settings (never passwords or Keychain items).": {
       "localizations": {
         "ru": {
@@ -2503,6 +2505,7 @@
         }
       }
     },
+    "Enable Sound and restart the VM to provide a microphone to SteamOS.": {},
     "Encode": {
       "localizations": {
         "ru": {
@@ -4190,6 +4193,9 @@
         }
       }
     },
+    "Mac input device": {},
+    "Mac input device is idle": {},
+    "Mac input device is in use": {},
     "Medium": {
       "localizations": {
         "ru": {
@@ -4334,6 +4340,8 @@
         }
       }
     },
+    "Microphone": {},
+    "Microphone permission": {},
     "Microphone: the guest records from the macOS default input; macOS asks for permission the first time.": {
       "localizations": {
         "ru": {
@@ -4712,6 +4720,7 @@
         }
       }
     },
+    "No input device connected": {},
     "No release notes.": {
       "localizations": {
         "ru": {
@@ -4760,6 +4769,7 @@
         }
       }
     },
+    "Not allowed": {},
     "Not available here: %@; MoltenVK is used.": {
       "localizations": {
         "ru": {
@@ -5064,6 +5074,7 @@
         }
       }
     },
+    "Open Microphone Settings": {},
     "Open Releases Page": {
       "localizations": {
         "ru": {
@@ -7580,6 +7591,7 @@
         }
       }
     },
+    "SteamOS records from the Mac's default input when a game or voice chat requests it. Choose the input in macOS Sound settings. Device activity can include other Mac apps and does not confirm that SteamOS receives a signal.": {},
     "SteamOS set up": {
       "localizations": {
         "ru": {
@@ -8660,6 +8672,7 @@
         }
       }
     },
+    "Unknown": {},
     "Unknown game": {
       "localizations": {
         "ru": {

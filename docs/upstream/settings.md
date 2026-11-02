@@ -49,3 +49,23 @@ For tests: `STEAMAC_DEFAULTS_DOMAIN=<domain>` substitutes the settings domain; `
 --selftest-out DIR` opens the window without a VM and writes a PNG of each tab; `--control-fifo` has
 `settings TAB`, `settings-dump PNG`, `set KEY VALUE` (as from the window), `restart`.
 
+
+## Microphone status and capture startup
+
+Sound shows the macOS default input device, microphone permission, and device activity.
+Use **Allow Microphone** before starting voice chat; if access was denied, **Open Microphone
+Settings** opens the macOS permission pane. Opening Settings never starts a recording.
+The microphone opens only when a SteamOS app records. Device activity includes other Mac
+apps and is not a guest signal meter. Choose another default input in macOS Sound settings.
+
+The asynchronous CoreAudio capture backend now initializes its Float32 callback stride
+and channel count before starting the input unit, including mono/stereo format changes.
+It leaves capture buffers queued during PREPARE until PCM_START and paces startup silence
+at the negotiated sample rate while the microphone opens. Previously, early/instant buffer
+completion advanced ALSA's hardware pointer before its clock, causing repeated XRUN,
+STOP and START cycles that could cancel the microphone worker and deliver no input.
+Rebuild **host/libkrun** as well as the launcher to apply the capture fix.
+
+Verification: the macOS virtio-snd tests cover the PREPARE/startup timing regression; the
+launcher settings self-test renders the Sound pane. A separate SteamOS test VM captured
+15 seconds of 48 kHz stereo input from a MacBook Pro microphone without XRUNs.
